@@ -1,0 +1,32 @@
+# depslib dependency file v1.0
+1618042787 source:d:\projects\caro\main.cpp
+	<stdlib.h>
+	<iostream>
+	"game.h"
+
+1618060796 d:\projects\caro\game.h
+	"interface/interface.h"
+	"player/player.h"
+
+1618059911 d:\projects\caro\interface\interface.h
+
+1618063076 d:\projects\caro\player\player.h
+
+1618062539 source:d:\projects\caro\system\game.cpp
+	<iostream>
+	<time.h>
+	<deque>
+	<string.h>
+	"../game.h"
+
+1618051303 source:d:\projects\caro\player\player.cpp
+	"player.h"
+
+1618062905 source:d:\projects\caro\interface\interface.cpp
+	<iostream>
+	<windows.h>
+	<conio.h>
+	"../game.h"
+
+1618049887 d:\projects\caro\system\board.h
+
