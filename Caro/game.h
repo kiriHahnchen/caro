@@ -16,9 +16,12 @@ struct CORD {
 class Game {
 private:
 
-    int         N = 0   ,
-                turn    ,
-                playing ;
+    int         N = 0           ,
+                turn            ,
+                playing         ,
+                winning_N = 0   ,
+                turn_cnt = 0    ,
+                winner          ;
 
     char        BOARD[MAX_N][MAX_N] ;
 
@@ -33,7 +36,7 @@ public:
 
     char    SYB[2]  = {'O','X'};
     void    clear_board();
-    int     check_win(int,int,char);
+    int     check_win(int,int,int);
 
     // CONSTRUCTORS
 
@@ -48,16 +51,25 @@ public:
     void    setN(int);
     int     getN();
 
+    void    setWinningN(int);
+    int     getWinningN();
+
     void    toggleTurn();
     void    setTurn(int);
     int     getTurn();
+
+    void    add_turn();
+    int     getTurnCnt();
+
+    void    setWinner(int);
+    int     getWinner();
 
     void    setCord(int,int);
 
     void    setPlaying(int);
     int     isPlaying();
 
-    void    setSymbol(int,int,char);
+    void    setSymbol(int,int,int);
     char    getSymbol(int,int);
 
 };

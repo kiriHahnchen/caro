@@ -19,11 +19,11 @@ public:
     /*  FUNCTIONS       */
 
     void    gotoxy(int,int);
-    int     Init();
+    void    Init(Game*);
 
     void    print_game(Game*);
     void    next_move(Game*);
-    void    game_over(Game*);
+    void    game_over(Game*,int);
 
 };
 

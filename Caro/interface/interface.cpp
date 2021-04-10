@@ -10,12 +10,15 @@
 
 // INITIALIZE
 
-int Interface::Init()
+void Interface::Init(Game *GAME)
 {
-    int input;
+    int input_N = 0         ,
+        input_winning_N = 0 ;
 
     do
     {
+        int input;
+
         /* INPUT SCREEN */
 
         system("cls");
@@ -25,26 +28,65 @@ int Interface::Init()
                     << " Enter board size (nxn): "
                     ;
 
-        /* READ INPUT */
+        /* INPUT & VALIDATION */
 
-        std::cin >> input;
-
-        /* VALIDATION */
-
-        if ( (unsigned)input-MIN_N <= MAX_N-MIN_N )
+        if (!input_N)
         {
-            return input;
+            fflush(stdin);
+            std::cin >> input;
+
+            if ( (unsigned)input-MIN_N > MAX_N-MIN_N )
+            {
+                system("cls");
+                std::cout   << std::endl
+                            << " [*] Invalid input! Try again." << std::endl
+                            << std::endl
+                            << " "
+                            ;
+
+                fflush(stdin);
+                getch();
+                continue;
+            }
+            else
+            {
+                input_N = input;
+            }
         }
         else
         {
-            system("cls");
-            std::cout   << std::endl
-                        << " [*] Invalid input! Try again." << std::endl
-                        << std::endl
-                        << " "
-                        ;
-            system("pause");
+            std::cout  << input_N << std::endl;
         }
+
+        std::cout   << std::endl
+                    << " Enter winning amount: ";
+
+        if (!input_winning_N)
+        {
+            fflush(stdin);
+            std::cin >> input;
+
+            if ( (unsigned)input-MIN_N > input_N-MIN_N )
+            {
+                system("cls");
+                std::cout   << std::endl
+                            << " [*] Invalid input! Try again." << std::endl
+                            << std::endl
+                            << " "
+                            ;
+                fflush(stdin);
+                getch();
+                continue;
+            }
+            else
+            {
+                input_winning_N = input;
+            }
+        }
+
+        GAME->setN(input_N);
+        GAME->setWinningN(input_winning_N);
+        return;
 
     } while (1);
 }
@@ -109,6 +151,8 @@ void Interface::print_game(Game *GAME)
     }
 }
 
+// NEXT MOVE
+
 void Interface::next_move(Game *GAME)
 {
     int n = GAME->getN(),
@@ -159,14 +203,23 @@ void Interface::next_move(Game *GAME)
     } while (1);
 }
 
-void Interface::game_over(Game *GAME)
+// END GAME PRINTING
+
+void Interface::game_over(Game *GAME, int winner)
 {
+    fflush(stdin);
     print_game(GAME);
     std::cout   << std::endl
-                << std::endl
-                << " [*] Player " << !(GAME->getTurn()) << " wins!" << std::endl
-                << std::endl
-                ;
+                << std::endl;
+    if (!winner)
+    {
+        std::cout   << " [*] It's a draw!" << std::endl;
+    }
+    else
+    {
+        std::cout   << " [*] Player " << winner-1 << " wins!" << std::endl;
+    }
+    std::cout << std::endl;
     getch();
 }
 
@@ -182,9 +235,9 @@ Interface::Interface(Game *GAME)
 
     fflush(stdin);
 
-    if (!GAME->getN())
+    if (!GAME->getN() || !GAME->getWinningN())
     {
-        GAME->setN(Init());
+        Init(GAME);
     }
 
     /* CHECK IF STILL PLAYING */
@@ -195,7 +248,7 @@ Interface::Interface(Game *GAME)
     }
     else
     {
-        game_over(GAME);
+        game_over(GAME, GAME->getWinner());
     }
 }
 

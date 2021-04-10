@@ -15,7 +15,7 @@ void Game::clear_board()
         for (int j=0;j<29;j++) BOARD[i][j]=' ';
 }
 
-int Game::check_win(int x, int y, char syb)
+int Game::check_win(int x, int y, int plr)
 {
     int dx[4] = {1, 0, 1, -1};
     int dy[4] = {0, 1, 1,  1};
@@ -43,10 +43,10 @@ int Game::check_win(int x, int y, char syb)
 
             visit[curr_x][curr_y]=1;
 
-            if (getSymbol(curr_x,curr_y) != syb)    continue;
+            if (getSymbol(curr_x,curr_y) != SYB[plr])    continue;
 
             cnt++;
-            if (cnt==5) return 1;
+            if (cnt>=winning_N) return 1;
 
             cord_queue.push_back({curr_x+dx[i],
                                   curr_y+dy[i]}
@@ -73,6 +73,16 @@ void Game::setN(int n)
 int  Game::getN()
 {
     return N;
+}
+
+void Game::setWinningN(int x)
+{
+    winning_N = x;
+}
+
+int  Game::getWinningN()
+{
+    return winning_N;
 }
 
 void Game::toggleTurn()
@@ -105,15 +115,46 @@ char Game::getSymbol(int x, int y)
     return BOARD[x][y];
 }
 
-void Game::setSymbol(int x, int y, char symbol)
+void Game::setSymbol(int x, int y, int plr)
 {
-    BOARD[x][y] = symbol;
-    setPlaying(!check_win(x,y,symbol));
+    BOARD[x][y] = SYB[plr];
+
+    if (check_win(x,y,plr))
+    {
+        setWinner(plr+1);
+        setPlaying(0);
+    }
 }
 
 void Game::setCord(int x, int y)
 {
     PTR = {x, y};
+}
+
+int  Game::getTurnCnt()
+{
+    return turn_cnt;
+}
+
+void Game::add_turn()
+{
+    turn_cnt++;
+
+    if (turn_cnt >= N*N)
+    {
+        setPlaying(0);
+        setWinner(0);
+    }
+}
+
+void Game::setWinner(int n)
+{
+    winner = n;
+}
+
+int  Game::getWinner()
+{
+    return winner;
 }
 
     /*========================*/
@@ -131,9 +172,11 @@ Game::Game()
     do
     {
         INTERFACE = Interface(this);
+
         if (isPlaying())
         {
-            setSymbol(PTR.X,PTR.Y,SYB[turn]);
+            setSymbol(PTR.X,PTR.Y,turn);
+            add_turn();
             toggleTurn();
         }
         else
